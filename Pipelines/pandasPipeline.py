@@ -8,26 +8,27 @@ pwd = os.environ.get('PASSOS')
 uid = os.environ.get('USEROS')
 #sql db details
 driver = "{SQL Server Native Client 11.0}"
-server = "jdbc:sqlserver://PROMETHEUS\SQLEXPRESS"
+server = "PROMETHEUS"
 database = "AdventureWorksDW2019;"
 
 #extract data from sql server
-def extract():
+def extract(driver, server, database, uid, pwd):
     try:
         src_conn = pyodbc.connect('DRIVER=' + driver + ';SERVER=' + server + '\SQLEXPRESS' + ';DATABASE=' + database + ';UID=' + uid + ';PWD=' + pwd)
-        src_cursor = src_conn.cursor()
-        # execute query
-        src_cursor.execute(""" select  t.name as table_name
-        from sys.tables t where t.name in ('DimProduct','DimProductSubcategory','DimProductSubcategory','DimProductCategory','DimSalesTerritory','FactInternetSales') """)
-        src_tables = src_cursor.fetchall()
-        for tbl in src_tables:
-            #query and load save data to dataframe
-            df = pd.read_sql_query(f'select * FROM {tbl[0]}', src_conn)
-            load(df, tbl[0])
+        # src_cursor = src_conn.cursor()
+        # # execute query
+        # src_cursor.execute(""" SELECT  EnglishDayNameOfWeek
+        # from dbo.DimDate """)
+        #query and load save data to dataframe
+        df = pd.read_sql_query(f'select * FROM EnglishDayNameOfWeek', src_conn)
+        load(df, 'EnglishDayNameOfWeek')
     except Exception as e:
         print("Data extract error: " + str(e))
     finally:
         src_conn.close()
+
+
+df = extract(driver, server, database, uid, pwd)
 
 # #load data to postgres
 # def load(df, tbl):
