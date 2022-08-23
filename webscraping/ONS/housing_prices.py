@@ -4,8 +4,6 @@ downloadUrl = 'https://www.ons.gov.uk/generator?uri=/economy/inflationandpricein
 
 
 with requests.get(downloadUrl) as rq:
-    with open('housing_prices.csv', 'wb') as file:
+    with open("C:\\Data\\ONS\\housing_prices\\housing_prices.csv", 'wb') as file:
         file.write(rq.content)
-
-  
-
+    
